@@ -269,7 +269,7 @@ function init() {
 
     camera = new THREE.PerspectiveCamera(20, window.innerWidth / window.innerHeight, 1, 10000);
     scene.add(camera);
-    camera.position.set (60,0,40);
+    camera.position.set (60,20,30);
     camera.up.set (0,0,1);
     camera.lookAt (new THREE.Vector3(200,200,0));
 
@@ -501,7 +501,7 @@ function animate() {
     mesh.geometry.computeVertexNormals();
     
     mesh.geometry.normalsNeedUpdate = true;
-    controls.update();
+    //controls.update();
 	stats.update();
     controls.userPan = false;
 	
