@@ -289,6 +289,31 @@ function simulate(model){
 	//console.log(need_balance);
 	//console.log("animate:"+need_balance);
 }
+var border_geo,border_mat,border_geo2,border_mat2,border1,border2,border3,border4;
+function border_set(){
+	border_geo = new THREE.BoxGeometry( 40, 2, 2 );
+	border_mat = new THREE.MeshPhongMaterial( {color: 0x222222} );
+
+	border_geo2 = new THREE.BoxGeometry( 33, 2, 2 );
+	border_mat2 = new THREE.MeshPhongMaterial( {color: 0x222222} );	
+	
+	border1 = new THREE.Mesh( border_geo, border_mat );
+	border1.position.set (-2,11,0);
+	scene.add( border1 );
+
+	border2 = new THREE.Mesh( border_geo, border_mat );
+	border2.position.set (-2,-20,0);
+	scene.add( border2 );
+
+	border3 = new THREE.Mesh( border_geo2, border_mat2 );
+	border3.position.set (18,-4.5,0);
+	border3.rotation.z = 3.14/2;
+	scene.add( border3 );
+	border4 = new THREE.Mesh( border_geo2, border_mat2 );
+	border4.position.set (-21,-4.5,0);
+	border4.rotation.z = 3.14/2;
+	scene.add( border4 );	
+}
 
 function objtest() {
 
@@ -298,7 +323,7 @@ function objtest() {
 	obj1.obj = new THREE.Mesh( obj1.geo, obj1.mat );
 	*/
 
-	obj1.geo = new THREE.TorusGeometry( 3, 1, 8, 50 );
+	obj1.geo = new THREE.BoxGeometry( 5, 5, 5 );
 	obj1.mat = new THREE.MeshPhongMaterial( {color: 0x00ffff} );
 	obj1.obj = new THREE.Mesh( obj1.geo, obj1.mat );
 
@@ -370,9 +395,9 @@ function init() {
 
     camera = new THREE.PerspectiveCamera(20, window.innerWidth / window.innerHeight, 1, 10000);
     scene.add(camera);
-    camera.position.set (60,20,30);
+    camera.position.set (-2.5,70,60);
     camera.up.set (0,0,1);
-    camera.lookAt (new THREE.Vector3(200,200,0));
+    camera.lookAt (new THREE.Vector3(-2.5,0,0));
 
     light = new THREE.PointLight(0xffffff);
     light.position.set(-30, 50, 100);
@@ -387,7 +412,7 @@ function init() {
     document.body.appendChild(renderer.domElement);
     window.addEventListener('resize', onWindowResize, false);
 
-    controls = new THREE.TrackballControls(camera);
+    //controls = new THREE.TrackballControls(camera);
 
 
     hex0 = initUnitHexMesh();
@@ -402,6 +427,7 @@ function init() {
 	shoes = new obj();
 	shoes.weight = 0.98;
 	objtest();
+	border_set();
 	load_model();
     hex0.visible = false;
 	//pickables = [obj1.obj,obj2.obj];
@@ -435,7 +461,7 @@ function init() {
 	window.addEventListener('resize', onWindowResize, false);
 	
 	// mousemove
-	document.addEventListener( 'mousemove', onDocumentMouseMove, false );
+	//document.addEventListener( 'mousemove', onDocumentMouseMove, false );
 	
     document.addEventListener('touchstart', onDocumentTouchStart, false);
     document.addEventListener('touchmove', onDocumentTouchStart, false);  // same callback	
@@ -651,7 +677,7 @@ function animate() {
     mesh.geometry.normalsNeedUpdate = true;
     //controls.update();
 	stats.update();
-    controls.userPan = false;
+    //controls.userPan = false;
 	
 	keyboard.update();
     requestAnimationFrame(animate);
