@@ -1,24 +1,23 @@
-
-
-
-var animate_ring_amount = [];//å„²å­˜æ¯å€‹ringçš„æ•¸é‡ã€‚
-var animate_ring_save = [];//å„²å­˜æ¯å€‹ringçš„ä½ç½®ã€‚
-var animate_find_number = 0;//æœå°‹ç¬¬å¹¾å€‹ringã€‚
+var animate_ring_amount = [];//Àx¦s¨C­Óringªº¼Æ¶q¡C
+var animate_ring_save = [];//Àx¦s¨C­Óringªº¦ì¸m¡C
+var animate_find_number = 0;//·j´M²Ä´X­Óring¡C
 var animate_BoundingVertices = [];
 
 var save_ring_amount = [];
 var save_ring_save = [];
 var save_BoundingVertices = [];
 
-function animate_FindRings(){
+var need_balance_ring = 0; // last objring;
+var undir = [];
+function animate_FindRings(fobj){
 	var ring = [];
 	var repeat;
 	var repeat1;
+	var repeat2;
 	var check;
 
 	save_BoundingVertices = [];
 	NewRing = [];
-	
 	for(j = 0; j <sumhold.length; j++){
 		hex = pixel_to_hex(layout, Point(mesh.geometry.vertices[sumhold[j]].x,mesh.geometry.vertices[sumhold[j]].y));
 		ring = hex_ring(hex,1);
@@ -28,38 +27,55 @@ function animate_FindRings(){
 			intersects = raycaster.intersectObjects(pickables);
 			repeat = false;
 			repeat1 = false;
-			if(intersects.length !=0){//å¦‚æœæœ‰åµæ¸¬åˆ°ç‰©é«”ï¼Œæª¢æ¸¬é«˜åº¦æ˜¯å¦ä½æ–¼æ²™é¢ã€‚
+			repeat2 = false;
+			if(intersects.length !=0){//¦pªG¦³°»´ú¨ìª«Åé¡AÀË´ú°ª«×¬O§_§C©ó¨F­±¡C
 				vID = hashHexVertex(ring[k].q,ring[k].r);
 				raydis = intersects[0].point.clone();
 				if(raydis.z>mesh.geometry.vertices[vID].z){
 					if(animate_find_number==0){
-						for(check = 0; check < NewRing.length; check++){//æª¢æŸ¥æ˜¯å¦ç‚ºå·²ç¶“å„²å­˜éçš„ä½ç½®ã€‚
+						for(check = 0; check < NewRing.length; check++){//ÀË¬d¬O§_¬°¤w¸gÀx¦s¹Lªº¦ì¸m¡C
 							if(NewRing[check]===vID){
 								repeat = true;
+								break;
 							}
 						}
-						for(check = 0; check < sumhold.length; check++){//æª¢æŸ¥æ˜¯å¦ç‚ºåŸæª¢æŸ¥ä½ç½®ã€‚
+						for(check = 0; check < sumhold.length; check++){//ÀË¬d¬O§_¬°­ìÀË¬d¦ì¸m¡C
 							if(sumhold[check]===vID){
 								repeat1 = true;
+								break;
 							}
-						}							
-						if(repeat === false && repeat1 === false){//æ²’æœ‰é‡è¤‡æ‰å„²å­˜ã€‚
+						}
+						for(check = 0; check < undir.length; check++){
+							if(undir[check]===vID){
+								repeat2 = true;
+								break;
+							}							
+						}
+						if(repeat === false && repeat1 === false && repeat2 === false){//¨S¦³­«½Æ¤~Àx¦s¡C
 							save_BoundingVertices.push(vID);
 							NewRing.push(vID);
 						}
 					}
 					if(animate_find_number!=0){
-						for(check = 0; check < NewRing.length; check++){//æª¢æŸ¥æ˜¯å¦ç‚ºå·²ç¶“å„²å­˜éçš„ä½ç½®ã€‚
+						for(check = 0; check < NewRing.length; check++){//ÀË¬d¬O§_¬°¤w¸gÀx¦s¹Lªº¦ì¸m¡C
 							if(NewRing[check]===vID){
 								repeat = true;
+								break;
 							}
 						}
-						for(check = 0; check < sumhold.length; check++){//æª¢æŸ¥æ˜¯å¦ç‚ºåŸæª¢æŸ¥ä½ç½®ã€‚
+						for(check = 0; check < sumhold.length; check++){//ÀË¬d¬O§_¬°­ìÀË¬d¦ì¸m¡C
 							if(sumhold[check]===vID){
 								repeat1 = true;
+								break;
 							}
-						}							
-						if(repeat === false && repeat1 === false){//æ²’æœ‰é‡è¤‡æ‰å„²å­˜ã€‚
+						}
+						for(check = 0; check < undir.length; check++){
+							if(undir[check]===vID){
+								repeat2 = true;
+								break;
+							}							
+						}						
+						if(repeat === false && repeat1 === false && repeat2 === false){//¨S¦³­«½Æ¤~Àx¦s¡C
 							NewRing.push(vID);
 						}
 					}
@@ -69,36 +85,52 @@ function animate_FindRings(){
 			}
 				
 				
-			if(intersects.length ==0){//å¦‚æœæ²’åµæ¸¬åˆ°ç‰©é«”ï¼Œå„²å­˜ä½ç½®ã€‚
+			if(intersects.length ==0){//¦pªG¨S°»´ú¨ìª«Åé¡AÀx¦s¦ì¸m¡C
 				vID = hashHexVertex(ring[k].q,ring[k].r);
 				if(animate_find_number==0){
-					for(check = 0; check < NewRing.length; check++){//æª¢æŸ¥æ˜¯å¦ç‚ºå·²ç¶“å„²å­˜éçš„ä½ç½®ã€‚
+					for(check = 0; check < NewRing.length; check++){//ÀË¬d¬O§_¬°¤w¸gÀx¦s¹Lªº¦ì¸m¡C
 						if(NewRing[check]===vID){
 							repeat = true;
+							break;
 						}
 					}
-					for(check = 0; check < sumhold.length; check++){//æª¢æŸ¥æ˜¯å¦ç‚ºåŸæª¢æŸ¥ä½ç½®ã€‚
+					for(check = 0; check < sumhold.length; check++){//ÀË¬d¬O§_¬°­ìÀË¬d¦ì¸m¡C
 						if(sumhold[check]===vID){
 							repeat1 = true;
+							break;
 						}
-					}						
-					if(repeat === false && repeat1 === false){//æ²’æœ‰é‡è¤‡æ‰å„²å­˜ã€‚
+					}
+					for(check = 0; check < undir.length; check++){
+						if(undir[check]===vID){
+							repeat2 = true;
+							break;
+						}							
+					}					
+					if(repeat === false && repeat1 === false && repeat2 === false){//¨S¦³­«½Æ¤~Àx¦s¡C
 						save_BoundingVertices.push(vID);
 						NewRing.push(vID);
 					}
 				}
 				if(animate_find_number!=0){
-					for(check = 0; check < NewRing.length; check++){//æª¢æŸ¥æ˜¯å¦ç‚ºå·²ç¶“å„²å­˜éçš„ä½ç½®ã€‚
+					for(check = 0; check < NewRing.length; check++){//ÀË¬d¬O§_¬°¤w¸gÀx¦s¹Lªº¦ì¸m¡C
 						if(NewRing[check]===vID){
 							repeat = true;
+							break;
 						}
 					}
-					for(check = 0; check < sumhold.length; check++){//æª¢æŸ¥æ˜¯å¦ç‚ºåŸæª¢æŸ¥ä½ç½®ã€‚
+					for(check = 0; check < sumhold.length; check++){//ÀË¬d¬O§_¬°­ìÀË¬d¦ì¸m¡C
 						if(sumhold[check]===vID){
 							repeat1 = true;
+							break;
 						}
-					}							
-					if(repeat === false && repeat1 === false){//æ²’æœ‰é‡è¤‡æ‰å„²å­˜ã€‚
+					}
+					for(check = 0; check < undir.length; check++){
+						if(undir[check]===vID){
+							repeat2 = true;
+							break;
+						}							
+					}					
+					if(repeat === false && repeat1 === false && repeat2 === false){//¨S¦³­«½Æ¤~Àx¦s¡C
 						NewRing.push(vID);
 					}
 				}
@@ -107,140 +139,151 @@ function animate_FindRings(){
 				
 		}
 	}
-	save_ring_amount.push(NewRing.length);//å„²å­˜æ¯å€‹ringçš„æ•¸é‡ã€‚
+	save_ring_amount.push(NewRing.length);//Àx¦s¨C­Óringªº¼Æ¶q¡C
 	//console.log(save_ring_amount[animate_find_number]);
 	
-	save_ring_save[animate_find_number] = new Array();
+	animate_ring_save[animate_find_number] = new Array();
 	
-	for(l = 0; l < NewRing.length; l++){
-		sumhold.push(NewRing[l]);
-		//console.log("1:"+NewRing[l]);
-		save_ring_save[animate_find_number][l]= NewRing[l];//å„²å­˜æ¯å€‹ringçš„ä½ç½®ã€‚
-		//console.log("2:"+save_ring_save[animate_find_number][l]);
-	}
+	
+	
 	if(animate_find_number == 0){
-		animate_Find_hi_lo();
+		Find_Normal(fobj);
+		//console.log("123");
+		//console.log("11:"+animate_BoundingVertices.length);
+		for(l = 0; l < animate_BoundingVertices.length; l++){
+			//console.log("11:"+animate_BoundingVertices.length);
+			sumhold.push(animate_BoundingVertices[l]);
+			//console.log("1:"+NewRing[l]);
+			animate_ring_save[animate_find_number][l]= NewRing[l];//Àx¦s¨C­Óringªº¦ì¸m¡C
+			//fobj.ring_save.push(NewRing[l]);
+			//console.log("2:"+save_ring_save[animate_find_number][l]);		
+		}
+	}	
+
+	if(animate_find_number != 0){
+		console.log("f:"+animate_find_number+"    n:"+NewRing.length);
+		for(l = 0; l < NewRing.length; l++){
+			sumhold.push(NewRing[l]);
+			//console.log("1:"+NewRing[l]);
+			animate_ring_save[animate_find_number][l]= NewRing[l];//Àx¦s¨C­Óringªº¦ì¸m¡C
+			//fobj.ring_save.push(NewRing[l]);
+			//console.log("2:"+save_ring_save[animate_find_number][l]);
+		}
 	}
-	animate_dir_dis();//æ‰¾å‡ºèˆ‡è¡Œå¾‘æ–¹å‘ç›¸åŒçš„åˆ†é…ä½ç½®ã€‚
-	
-	animate_balance();
-}
-
-
-
-var newpos = new THREE.Vector2();//æ–°çš„ä½ç½®ã€‚
-var move_direction = new THREE.Vector2();//ç§»å‹•çš„æ–¹å‘ã€‚
-var standard = new THREE.Vector2(-100, -100);//è¨ˆç®—vertexæ–¹å‘çš„åŸºæº–é»ã€‚
-var standard_vector = new THREE.Vector2();//vertexåˆ°åŸºæº–é»çš„å‘é‡ã€‚
-var proj_length = 0;//standard_vectoræŠ•å½±åˆ°move_directionçš„é•·åº¦ã€‚
-var move_standard_dot; //ç§»å‹•æ–¹å‘ã€standard_vectorå…§ç©ã€‚
-var standard_vector_long = new THREE.Vector2();
-var long_num;
-var short_num;
-
-function animate_Find_hi_lo(){
-	
-	newpos.x = torus.position.x;//æ–°çš„ä½ç½®ã€‚
-	newpos.y = torus.position.y;
-	//console.log(lastpos);
-	//console.log(newpos);
-	move_direction.x = newpos.x - lastpos.x;//ç§»å‹•æ–¹å‘ã€‚
-	move_direction.y = newpos.y - lastpos.y;
-	//console.log(move_direction);
-	for(var i = 0; i < save_ring_save[animate_find_number].length; i++){
-		//vertexåˆ°åŸºæº–é»çš„å‘é‡ã€‚
-		//mesh.geometry.vertices[save_ring_save[animate_find_number][i]].z = 1;
-		standard_vector.x = standard.x - mesh.geometry.vertices[save_ring_save[animate_find_number][i]].x;
-		standard_vector.y = standard.y - mesh.geometry.vertices[save_ring_save[animate_find_number][i]].y;
-		//console.log(standard_vector);
-		move_standard_dot = move_direction.dot(standard_vector);
-		//console.log(move_standard_dot);
-		proj_length = move_standard_dot/move_direction.length();//æŠ•å½±é•·åº¦ã€‚
-		//console.log(proj_length);
-		if(i === 0 ){//ç®—å‡ºæœ€é«˜&æœ€ä½çš„ä½ç½®ã€‚
-			long_dis = Math.sqrt(standard_vector.length()*standard_vector.length()-proj_length*proj_length);
-			short_dis = Math.sqrt(standard_vector.length()*standard_vector.length()-proj_length*proj_length);
-			long_num = save_ring_save[animate_find_number][i];
-			short_num = save_ring_save[animate_find_number][i];
-		}
-		else{
-			if(Math.sqrt(standard_vector.length()*standard_vector.length()-proj_length*proj_length) > long_dis){
-				long_dis = Math.sqrt(standard_vector.length()*standard_vector.length()-proj_length*proj_length);
-				long_num = save_ring_save[animate_find_number][i];
-				
-			}
-			if(Math.sqrt(standard_vector.length()*standard_vector.length()-proj_length*proj_length) < short_dis){
-				short_dis = Math.sqrt(standard_vector.length()*standard_vector.length()-proj_length*proj_length);
-				short_num = save_ring_save[animate_find_number][i];
-				
-			}		
-		}
 		
-	}
-	//console.log(long_num);
-	//console.log(short_num);
-	//mesh.geometry.vertices[long_num].z += 1;
-	//mesh.geometry.vertices[short_num].z += 1;	
+	animate_balance();
+/*
+	if(vertical_move === false){
+		animate_dir_dis();//§ä¥X»P¦æ®|¤è¦V¬Û¦Pªº¤À°t¦ì¸m¡C
+		
+		animate_balance();
+	}*/
 }
 
+var vertical_move = false;//ÀË´ú¬O§_¬°««ª½²¾°Ê
+var newpos = new THREE.Vector2();//·sªº¦ì¸m¡C
+var move_direction = new THREE.Vector2();//²¾°Êªº¤è¦V¡C
 
-function animate_dir_dis(){
-	var vertex_vector = new THREE.Vector2();
-	if(animate_find_number == 0){
-		for(var i = 0; i < save_BoundingVertices.length; i++){
-			vertex_vector.x = mesh.geometry.vertices[save_BoundingVertices[i]].x-mesh.geometry.vertices[long_num].x;
-			vertex_vector.y = mesh.geometry.vertices[save_BoundingVertices[i]].y-mesh.geometry.vertices[long_num].y;
-			if(move_direction.dot(vertex_vector) > 0){
-				animate_BoundingVertices.push(save_BoundingVertices[i]);
-				//mesh.geometry.vertices[save_BoundingVertices[i]].z+=1;
+function Find_Normal(fobj){
+	//console.log("find normal");
+	var hit = [];
+	var hit_avg = new THREE.Vector2(0, 0);
+	var hit_normal = new THREE.Vector2();
+	var Bounding_Vertices_normal = [];
+	var nor_dir_dot;
+	//console.log(save_BoundingVertices.length);
+	for(j = 0; j <save_BoundingVertices.length; j++){
+		hex = pixel_to_hex(layout, Point(mesh.geometry.vertices[save_BoundingVertices[j]].x,mesh.geometry.vertices[save_BoundingVertices[j]].y));
+		ring = hex_ring(hex,1);	
+		for(k = 0; k < 6; k++){
+			var save = hex_to_pixel(layout, ring[k]);
+			raycaster = new THREE.Raycaster(new THREE.Vector3(save.x, save.y, -30), new THREE.Vector3(0, 0, 1));
+			intersects = raycaster.intersectObjects(pickables);	
+			if(intersects.length !=0){//¦pªG¦³°»´ú¨ìª«Åé
+				vID = hashHexVertex(ring[k].q,ring[k].r);	
+				hit.push(vID);
 			}
 		}
-
-		animate_ring_save[animate_find_number] = new Array();
-		for(var i = 0; i < save_ring_save[animate_find_number].length; i++){
-			vertex_vector.x = mesh.geometry.vertices[save_ring_save[animate_find_number][i]].x-mesh.geometry.vertices[long_num].x;
-			vertex_vector.y = mesh.geometry.vertices[save_ring_save[animate_find_number][i]].y-mesh.geometry.vertices[long_num].y;
-			if(move_direction.dot(vertex_vector) > 0){
-				animate_ring_save[animate_find_number].push(save_ring_save[animate_find_number][i]);
-			}
-			
+		for(i = 0; i < hit.length; i++){//§âinªº³¡¤À¥­§¡
+			hit_avg.x += mesh.geometry.vertices[hit[i]].x;
+			hit_avg.y += mesh.geometry.vertices[hit[i]].y;
 		}
-		//console.log(save_BoundingVertices.length);
-		//console.log(animate_BoundingVertices.length);
-		//console.log(animate_ring_save[0].length);
+		hit_avg.x /= hit.length;
+		hit_avg.y /= hit.length;
+		//console.log(hit_avg);
+		//¥­§¡«áºâ¥Xnormal
+		hit_normal.x = mesh.geometry.vertices[save_BoundingVertices[j]].x - hit_avg.x;
+		hit_normal.y = mesh.geometry.vertices[save_BoundingVertices[j]].y - hit_avg.y;
+		//hit_normal.x = hit_avg.x - mesh.geometry.vertices[save_BoundingVertices[j]].x;
+		//hit_normal.y = hit_avg.y - mesh.geometry.vertices[save_BoundingVertices[j]].y;		
+		
+		Bounding_Vertices_normal.push(new THREE.Vector2(hit_normal.x, hit_normal.y));
+		//console.log(Bounding_Vertices_normal[j]);
+		hit_avg = new THREE.Vector2(0, 0);
+	}
+	//console.log(Bounding_Vertices_normal);
+	//console.log(Bounding_Vertices_normal);
+	newpos.x = obj1.obj.position.x;//·sªº¦ì¸m¡C
+	newpos.y = obj1.obj.position.y;
+	//console.log(fobj.lastpos);
+	//console.log(newpos);
+	move_direction.x = newpos.x - fobj.lastpos.x;//²¾°Ê¤è¦V¡C
+	move_direction.y = newpos.y - fobj.lastpos.y;	
+	//console.log(move_direction);
+	
+	/*««ª½²¾°Ê
+	if(move_direction.x === 0 && move_direction.y === 0){//½T»{¬O§_¦³²¾°Ê
+		vertical_move = true;
+	}	*/
+	//console.log("14:"+Bounding_Vertices_normal.length);
+	for(i = 0; i < Bounding_Vertices_normal.length; i++){
+		//console.log(Bounding_Vertices_normal[i]);
+		nor_dir_dot = move_direction.dot(Bounding_Vertices_normal[i]);
+		//console.log(move_direction);
+		if(move_direction.dot(Bounding_Vertices_normal[i]) > -2){//-2 or 0??  -2¸û±µªñ
+			animate_BoundingVertices.push(save_BoundingVertices[i]);
+			//console.log(animate_BoundingVertices);
+		}
+	}
+	//console.log("15:"+animate_BoundingVertices.length);
+	
+	
+	for(i = 0; i < save_BoundingVertices.length; i++){
+		for(j = 0; j < Bounding_Vertices_normal.length; j++){
+			if(save_BoundingVertices[i] == Bounding_Vertices_normal[j]){
+				break;
+			}
+			else if(j == Bounding_Vertices_normal.length-1){
+				undir.push(save_BoundingVertices);
+			}
+		}
 	}
 	
-	if(animate_find_number > 0){
-		animate_ring_save[animate_find_number] = new Array();
-		for(var i = 0; i < save_ring_save[animate_find_number].length; i++){
-			//console.log("number:"+animate_find_number);
-			//console.log("array:"+save_ring_save[animate_find_number][i]);
-			vertex_vector.x = mesh.geometry.vertices[save_ring_save[animate_find_number][i]].x-mesh.geometry.vertices[long_num].x;
-			vertex_vector.y = mesh.geometry.vertices[save_ring_save[animate_find_number][i]].y-mesh.geometry.vertices[long_num].y;
-			if(move_direction.dot(vertex_vector) > 0){
-				animate_ring_save[animate_find_number].push(save_ring_save[animate_find_number][i]);
-			}
-			
-		}
-	}
+	/*
+	for(i = 0; i < animate_BoundingVertices.length; i++){
+		mesh.geometry.vertices[animate_BoundingVertices[i]].z = 1;
+	}*/
+	
+	
 }
 
 
-var animate_Vertices_Distribution = [];//bounding verticesçš„åˆ†é…é‡ã€‚
+
+var animate_Vertices_Distribution = [];//bounding verticesªº¤À°t¶q¡C
 var animate_Ring_Distribution = [];
 var animate_Distribution_Sum = 0;
-var animate_D_max = 0;//æœ€å¤§åˆ†é…å€¼ã€‚
-var animate_D_min = 0;//æœ€å°åˆ†é…å€¼ã€‚
-var animate_Distribution_Percent;//å¤šå°‘æ’æ²™é‡çš„ç™¾åˆ†æ¯”ï¼Œç­‰æ–¼angle of reposeã€‚
+var animate_D_max = 0;//³Ì¤j¤À°t­È¡C
+var animate_D_min = 0;//³Ì¤p¤À°t­È¡C
+var animate_Distribution_Percent;//¦h¤Ö±Æ¨F¶qªº¦Ê¤À¤ñ¡Aµ¥©óangle of repose¡C
 var animate_less;
-var animate_ring_dis_save = [];//ç´€éŒ„æ¯å€‹ringçš„æœ€çµ‚ç¸½åˆ†é…é‡ã€‚
-var animate_bv_dis_save = 0;//ç´€éŒ„bounding verticesä¸€æ¬¡æ‰€åˆ†é…çš„ç¸½é‡ã€‚
+var animate_ring_dis_save = [];//¬ö¿ı¨C­Óringªº³Ì²×Á`¤À°t¶q¡C
+var animate_bv_dis_save = 0;//¬ö¿ıbounding vertices¤@¦¸©Ò¤À°tªºÁ`¶q¡C
 var animate_need_findring = false;
-var need_more = false;
+var animate_need_more = false;
 function animate_balance (){
-	//console.log("an_run");
+	console.log("an_run");
 	if(animate_find_number==0){
-		var VertexDis = new THREE.Vector2();//ä¸‹å£“é»åˆ°å„bounding verticesçš„è·é›¢ã€‚
+		var VertexDis = new THREE.Vector2();//¤UÀ£ÂI¨ì¦Ubounding verticesªº¶ZÂ÷¡C
 		var vertex = new THREE.Vector2();
 		var downpoint = new THREE.Vector2();
 		//console.log(animate_BoundingVertices.length);
@@ -256,18 +299,18 @@ function animate_balance (){
 				vertex.x = mesh.geometry.vertices[animate_BoundingVertices[j]].x;
 				vertex.y = mesh.geometry.vertices[animate_BoundingVertices[j]].y;
 				
-				VertexDis = downpoint.distanceTo(vertex);//ç®—å‡ºå…©é»è·é›¢ã€‚
+				VertexDis = downpoint.distanceTo(vertex);//ºâ¥X¨âÂI¶ZÂ÷¡C
 				//console.log(VertexDis);
-				animate_Vertices_Distribution[j] += 1/VertexDis;//åŠ åæ¯”ã€‚
+				animate_Vertices_Distribution[j] += 1/VertexDis;//¥[¤Ï¤ñ¡C
 			}
 		}
 		animate_D_max=animate_Vertices_Distribution[0];
 		animate_D_min=animate_Vertices_Distribution[0];
-		for(i = 0; i < animate_Vertices_Distribution.length; i++){//æ‰€æœ‰åˆ†é…è·é›¢åŠ ç¸½ã€‚
-			if(animate_Vertices_Distribution[i]<animate_D_min){//æ‰¾å‡ºæœ€å°åˆ†é…å€¼ã€‚
+		for(i = 0; i < animate_Vertices_Distribution.length; i++){//©Ò¦³¤À°t¶ZÂ÷¥[Á`¡C
+			if(animate_Vertices_Distribution[i]<animate_D_min){//§ä¥X³Ì¤p¤À°t­È¡C
 				animate_D_min=animate_Vertices_Distribution[i];
 			}
-			if(animate_Vertices_Distribution[i]>animate_D_max){//æ‰¾å‡ºæœ€å¤§åˆ†é…å€¼ã€‚
+			if(animate_Vertices_Distribution[i]>animate_D_max){//§ä¥X³Ì¤j¤À°t­È¡C
 				animate_D_max=animate_Vertices_Distribution[i];
 			}
 		}
@@ -275,36 +318,36 @@ function animate_balance (){
 		//console.log("animate_D_max:"+animate_D_max);
 		//console.log(-sum*animate_D_max/animate_Distribution_Sum);
 		
-		for(i = 0; i < animate_Vertices_Distribution.length; i++){//å°‡åˆ†é…æ¯”ä¾‹èª¿ç‚º1~2ã€‚
+		for(i = 0; i < animate_Vertices_Distribution.length; i++){//±N¤À°t¤ñ¨Ò½Õ¬°1~2¡C
 			animate_Vertices_Distribution[i] = animate_Vertices_Distribution[i]/animate_D_max +1;
 			animate_Distribution_Sum += animate_Vertices_Distribution[i];
 			//console.log(animate_Vertices_Distribution[i]);
 		}
 		//console.log(-sum);
 		//console.log(-sum*animate_D_max/animate_Distribution_Sum);
-		animate_Distribution_Percent = 33.5/-sum; //å¤šå°‘æ’æ²™é‡çš„ç™¾åˆ†æ¯”ç­‰æ–¼angle of reposeã€‚
+		animate_Distribution_Percent = 33.5/-sum; //¦h¤Ö±Æ¨F¶qªº¦Ê¤À¤ñµ¥©óangle of repose¡C
 		/*
-		é™åˆ¶å¤§å°???<1å°±=1???å¾…æ¸¬è©¦ã€‚
+		­­¨î¤j¤p???<1´N=1???«İ´ú¸Õ¡C
 		*/
 		//console.log(animate_Distribution_Percent);
 		var BV_check=0;
 		
-		for(i = 0; i < animate_BoundingVertices.length; i++){//è©¦ç®—æ˜¯å¦åˆ†é…å®Œbounding verticesæ˜¯å¦ç¬¦åˆangle of reposeã€‚
+		for(i = 0; i < animate_BoundingVertices.length; i++){//¸Õºâ¬O§_¤À°t§¹bounding vertices¬O§_²Å¦Xangle of repose¡C
 			BV_check += -sum*animate_Distribution_Percent/100*animate_Vertices_Distribution[i];
 		}
 		animate_less = -sum;
 		//console.log(-sum);
 		//console.log("start animate_less:"+animate_less);
-		if(BV_check >= -sum){//ç¬¦åˆå‰‡ç›´æ¥åˆ†é…ã€‚
-			//console.log("just need bounding vertices");
+		if(BV_check >= -sum){//²Å¦X«hª½±µ¤À°t¡C
+			console.log("just need bounding vertices");
 			for(i = 0; i < animate_BoundingVertices.length; i++){
 				mesh.geometry.vertices[animate_BoundingVertices[i]].z += -sum*animate_Vertices_Distribution[i]/animate_Distribution_Sum;
 			}
-			need_more = false;
+			animate_need_more = false;
 			//Bas_balance2();
 		}
-		else{//ä¸ç¬¦åˆå‰‡ç´€éŒ„bounding verticesçš„åˆ†é…é‡ã€‚
-			//console.log("need more");
+		else{//¤£²Å¦X«h¬ö¿ıbounding verticesªº¤À°t¶q¡C
+			console.log("need more");
 			animate_ring_dis_save[animate_find_number] = new Array();
 			for(i = 0; i < animate_BoundingVertices.length; i++){
 				animate_ring_dis_save[animate_find_number][i] = -sum*animate_Distribution_Percent/100*animate_Vertices_Distribution[i];
@@ -315,7 +358,7 @@ function animate_balance (){
 			//console.log(animate_bv_dis_save);
 			//console.log("less0:"+animate_less);
 			animate_need_findring = true;
-			need_more = true;
+			animate_need_more = true;
 		}		
 	}
 	/*console.log("ring:"+animate_ring_dis_save.length);
@@ -335,16 +378,16 @@ function animate_balance (){
 	else{
 		//console.log("animate_find_number:"+animate_find_number);
 		//console.log("animate_ring_dis_save:"+animate_ring_dis_save.length);
-		for(i = 0; i < animate_ring_save.length; i++){//å†æ¬¡åˆ†é…çµ¦å·²åˆ†é…éçš„å±¤æ•¸ï¼Œä¸¦æª¢æŸ¥æ˜¯å¦å¤§æ–¼ç¸½æ’æ²™é‡ã€‚
+		for(i = 0; i < animate_ring_save.length; i++){//¦A¦¸¤À°tµ¹¤w¤À°t¹Lªº¼h¼Æ¡A¨ÃÀË¬d¬O§_¤j©óÁ`±Æ¨F¶q¡C
 		//console.log("i:"+i);
 			if(i == 0){
-				if(animate_less-animate_bv_dis_save<0){//å¦‚å‰©é¤˜é‡ä¸å¤ åˆ†é…è‡³bounding verticesï¼Œè·³å‡ºè¿´åœˆã€‚
+				if(animate_less-animate_bv_dis_save<0){//¦p³Ñ¾l¶q¤£°÷¤À°t¦Übounding vertices¡A¸õ¥X°j°é¡C
 					//console.log("break1");
 					animate_need_findring = false;
 				}
 				else{
 					for(l = 0; l < animate_ring_save[i].length; l++){
-						animate_less -= animate_ring_dis_save[i][l] / (animate_find_number);//ç®—å‡ºå‰©é¤˜é‡ã€‚
+						animate_less -= animate_ring_dis_save[i][l] / (animate_find_number);//ºâ¥X³Ñ¾l¶q¡C
 						animate_ring_dis_save[i][l] = animate_ring_dis_save[i][l] / (animate_find_number) * (animate_find_number+1);
 					}
 					//console.log(animate_bv_dis_save);
@@ -352,13 +395,15 @@ function animate_balance (){
 				}
 			}
 			else if(i != animate_find_number){
-				if(animate_less - animate_ring_save[i].length * (-sum) * animate_Distribution_Percent/100 < 0){//å¦‚å‰©é¤˜é‡ä¸å¤ åˆ†é…çµ¦ç¬¬i_ringï¼Œè·³å‡ºè¿´åœˆã€‚
+				if(animate_less - animate_ring_save[i].length * (-sum) * animate_Distribution_Percent/100 < 0){//¦p³Ñ¾l¶q¤£°÷¤À°tµ¹²Äi_ring¡A¸õ¥X°j°é¡C
 					//console.log("break2");
 					animate_need_findring = false;
 				}
 				else{
+					//console.log(animate_ring_save[i].length);
 					for(l = 0; l < animate_ring_save[i].length; l++){
-						//animate_less -= animate_ring_dis_save[i][l] / (animate_find_number-1);//ç®—å‡ºå‰©é¤˜é‡ã€‚
+						//animate_less -= animate_ring_dis_save[i][l] / (animate_find_number-1);//ºâ¥X³Ñ¾l¶q¡C
+						//console.log("2:"+animate_ring_dis_save[i][l]);
 						animate_less -= animate_ring_dis_save[i][l] / animate_find_number;
 						animate_ring_dis_save[i][l] = animate_ring_dis_save[i][l] / (animate_find_number) * (animate_find_number+1);
 					}
@@ -374,9 +419,9 @@ function animate_balance (){
 				}
 				else{
 					animate_ring_dis_save[animate_find_number] = new Array();
-					for(j = 0; j < animate_ring_save[i].length; j++){//åˆ†é…åŠè¨˜éŒ„ã€‚
-						animate_ring_dis_save[i][j] = (-sum) * animate_Distribution_Percent/100;//ç´€éŒ„æ–°åˆ†é…å±¤çš„åˆ†é…é‡ã€‚
-						animate_less -= (-sum) * animate_Distribution_Percent/100;//ç®—å‡ºå‰©é¤˜é‡ã€‚					
+					for(j = 0; j < animate_ring_save[i].length; j++){//¤À°t¤Î°O¿ı¡C
+						animate_ring_dis_save[i][j] = (-sum) * animate_Distribution_Percent/100;//¬ö¿ı·s¤À°t¼hªº¤À°t¶q¡C
+						animate_less -= (-sum) * animate_Distribution_Percent/100;//ºâ¥X³Ñ¾l¶q¡C					
 						//console.log((-sum) * animate_Distribution_Percent/100);
 					}
 					//console.log("less3:"+animate_less);
@@ -389,7 +434,7 @@ function animate_balance (){
 	
 	if(animate_need_findring === true){
 		animate_find_number++;
-		animate_FindRings();//æ‰¾ä¸‹ä¸€å€‹ringã€‚
+		animate_FindRings();//§ä¤U¤@­Óring¡C
 	}
 	
 	
@@ -399,21 +444,24 @@ function animate_balance (){
 
 
 function animate_balance_final(){
-	if(need_more === true){
-		for(var i = 0; i < animate_ring_dis_save[0].length; i++){//å‰©é¤˜é‡åˆ†é…åˆ°bvã€‚
+	if(animate_need_more === true){
+		for(var i = 0; i < animate_ring_dis_save[0].length; i++){//³Ñ¾l¶q¤À°t¨ìbv¡C
 			//animate_ring_dis_save[0][i] += animate_less*animate_Distribution_Percent/100*animate_Vertices_Distribution[i];
 			animate_ring_dis_save[0][i] += animate_less/animate_ring_dis_save[0].length;
 		}
 		//console.log(animate_ring_dis_save.length);
-		for(i = 0; i < animate_ring_dis_save.length; i++){//åˆæ­¥åˆ†é…ã€‚
+		for(i = 0; i < animate_ring_dis_save.length; i++){//ªì¨B¤À°t¡C
 			for(var j = 0; j < animate_ring_dis_save[i].length; j++){
 				mesh.geometry.vertices[animate_ring_save[i][j]].z += animate_ring_dis_save[i][j];
 			}
 		}	
 	}
-	//æ­¸é›¶ã€‚
+	//Âk¹s¡C
 	animate_ring_dis_save = [];
-	animate_ring_amount = [];//å„²å­˜æ¯å€‹ringçš„æ•¸é‡ã€‚
-	animate_ring_save = [];//å„²å­˜æ¯å€‹ringçš„ä½ç½®ã€‚
-	animate_find_number = 0;//æœå°‹ç¬¬å¹¾å€‹ringã€‚	
+	animate_ring_amount = [];//Àx¦s¨C­Óringªº¼Æ¶q¡C
+	animate_ring_save = [];//Àx¦s¨C­Óringªº¦ì¸m¡C
+	animate_find_number = 0;//·j´M²Ä´X­Óring¡C	
 }
+
+
+

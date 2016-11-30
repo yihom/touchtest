@@ -17,7 +17,7 @@ function animate_Adv_balance2(){
 		for(var j = 0; j<6; j++){
 			var save = hex_to_pixel(layout, ring[j]);
 			raycaster = new THREE.Raycaster(new THREE.Vector3(save.x, save.y, -30), new THREE.Vector3(0, 0, 1));
-			intersects = raycaster.intersectObjects(pickables);
+			intersects = raycaster.intersectObjects(pickables,true);
 			if(intersects.length ===0){
 				vID = hashHexVertex(ring[j].q,ring[j].r);
 				for(var l = 0; l<sumhold.length; l++){
@@ -100,7 +100,7 @@ function animate_Adv_balance2(){
 	var check_vID;
 	//console.log("in");
 	//console.log(remain);
-	nowpos.copy(torus.position);
+	nowpos.copy(obj1.obj.position);
 	
 	move_direction.x = nowpos.x-lastpos.x;
 	move_direction.y = nowpos.y-lastpos.y;	
@@ -117,7 +117,7 @@ function animate_Adv_balance2(){
 			for(j = 0; j<6; j++){
 				save = hex_to_pixel(layout, ring[j]);
 				raycaster = new THREE.Raycaster(new THREE.Vector3(save.x, save.y, -30), new THREE.Vector3(0, 0, 1));
-				intersects = raycaster.intersectObjects(pickables);
+				intersects = raycaster.intersectObjects(pickables,true);
 				check2 = 1;
 				if(intersects.length !=0){
 					raydis = intersects[0].point.clone();
@@ -201,7 +201,7 @@ function animate_Adv_balance(){
 	var loop = 0;
 	var counter=0;	
 	var check_reduce = 0;
-	nowpos.copy(torus.position);
+	nowpos.copy(obj1.obj.position);
 	
 	move_direction.x = nowpos.x-lastpos.x;
 	move_direction.y = nowpos.y-lastpos.y;
@@ -215,7 +215,7 @@ function animate_Adv_balance(){
 			for(var j = 0; j<6; j++){
 				var save = hex_to_pixel(layout, ring[j]);
 				raycaster = new THREE.Raycaster(new THREE.Vector3(save.x, save.y, -30), new THREE.Vector3(0, 0, 1));
-				intersects = raycaster.intersectObjects(pickables);
+				intersects = raycaster.intersectObjects(pickables,true);
 				check2 = 1;
 					if(intersects.length ===0){
 						vID = hashHexVertex(ring[j].q,ring[j].r);
