@@ -93,7 +93,7 @@ function initHex() {
         uniforms: {
             lightPos: {
                 type: 'v3',
-                value: new THREE.Vector3(50,-30, 110)
+                value: new THREE.Vector3(-30,50, 100)
             }
         },  
   uniforms: THREE.UniformsUtils.merge([
@@ -220,7 +220,7 @@ function initHex() {
 });	
 	
 	noiseMaterial.transparent = true;
-    mesh = new THREE.Mesh(geometry, material);
+    mesh = new THREE.Mesh(geometry, shaderMaterial);
 	mesh.castShadow = true;
 	mesh.receiveShadow = true;
     scene.add(mesh);
