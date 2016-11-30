@@ -220,7 +220,7 @@ function initHex() {
 });	
 	
 	noiseMaterial.transparent = true;
-    mesh = new THREE.Mesh(geometry, shaderMaterial);
+    mesh = new THREE.Mesh(geometry, material);
 	mesh.castShadow = true;
 	mesh.receiveShadow = true;
     scene.add(mesh);
