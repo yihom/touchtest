@@ -323,7 +323,7 @@ function objtest() {
 	obj1.obj = new THREE.Mesh( obj1.geo, obj1.mat );
 	*/
 
-	obj1.geo = new THREE.BoxGeometry( 5, 5, 5 );
+	obj1.geo = new THREE.BoxGeometry( 3, 3, 3 );
 	obj1.mat = new THREE.MeshPhongMaterial( {color: 0x00ffff} );
 	obj1.obj = new THREE.Mesh( obj1.geo, obj1.mat );
 
@@ -421,7 +421,7 @@ function init() {
 	
 	
 	obj1 = new obj();
-	obj1.weight = 0.2;
+	obj1.weight = 0.02;
 	obj2 = new obj();
 	obj2.weight = 0.05;
 	shoes = new obj();
