@@ -98,7 +98,7 @@ function initHex() {
         },  
   uniforms: THREE.UniformsUtils.merge([
      THREE.UniformsLib['shadowmap'],{
-	 lightPos: {type: 'v3',value: new THREE.Vector3(50,50, 50)}}
+	 lightPos: {type: 'v3',value: new THREE.Vector3(-30,50, 100)}}
     ]),
     
   	vertexShader: [
