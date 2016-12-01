@@ -318,7 +318,7 @@ function table_set(){
 	glass_geo = new THREE.BoxGeometry( 53, 44.5, 0.5 );
 	glass_mat = new THREE.MeshPhongMaterial( {color: 0xffffff, transparent: true , opacity: 0.5} );	
 	glass = new THREE.Mesh( glass_geo, glass_mat );
-	glass.position.set(5,0,-0.252);
+	glass.position.set(5,0,-0.254);
 	scene.add( glass );
 	
 }
@@ -420,7 +420,7 @@ function init() {
     document.body.appendChild(renderer.domElement);
     window.addEventListener('resize', onWindowResize, false);
 
-    controls = new THREE.TrackballControls(camera);
+   // controls = new THREE.TrackballControls(camera);
 
 
     hex0 = initUnitHexMesh();
@@ -683,9 +683,9 @@ function animate() {
     mesh.geometry.computeVertexNormals();
     
     mesh.geometry.normalsNeedUpdate = true;
-    controls.update();
+    //controls.update();
 	stats.update();
-    controls.userPan = false;
+    //controls.userPan = false;
 	
 	keyboard.update();
     requestAnimationFrame(animate);
