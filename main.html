@@ -324,7 +324,7 @@ function objtest() {
 	*/
 
 	obj1.geo = new THREE.BoxGeometry( 3, 3, 3 );
-	obj1.mat = new THREE.MeshPhongMaterial( {color: 0x00ffff} );
+	obj1.mat = new THREE.MeshPhongMaterial( {color: 0x00ffff, transparent: true , opacity: 0.0} );
 	obj1.obj = new THREE.Mesh( obj1.geo, obj1.mat );
 
 	/*
@@ -340,7 +340,7 @@ function objtest() {
 	obj1.obj.updateMatrixWorld(); 
 	obj1.lastpos.copy(obj1.obj.position);
 	scene.add(obj1.obj);
-	obj1.obj.castShadow = true;
+	//obj1.obj.castShadow = true;
 	obj1.obj.receiveShadow = false;
 
 
