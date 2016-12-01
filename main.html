@@ -367,7 +367,7 @@ function objtest() {
 	//scene.add( obj1.boundball );
 	  
 	//obj2
-	obj2.geo = new THREE.CylinderGeometry( 3, 3, 1, 32 );
+	obj2.geo = new THREE.CylinderGeometry( 2, 2, 1, 32 );
 	obj2.mat = new THREE.MeshPhongMaterial( {color: 0x00ffff} );
 	obj2.obj = new THREE.Mesh( obj2.geo, obj2.mat );  
 
@@ -469,7 +469,7 @@ function init() {
 	window.addEventListener('resize', onWindowResize, false);
 	
 	// mousemove
-	//document.addEventListener( 'mousemove', onDocumentMouseMove, false );
+	document.addEventListener( 'mousemove', onDocumentMouseMove, false );
 	
     document.addEventListener('touchstart', onDocumentTouchStart, false);
     document.addEventListener('touchmove', onDocumentTouchStart, false);  // same callback	
