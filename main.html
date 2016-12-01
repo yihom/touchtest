@@ -241,8 +241,8 @@ function load_model(){
 
 
 function first_simulate(model){
-	//hex = pixel_to_hex(layout, Point(model.obj.position.x, model.obj.position.y));
-	//ray(hex_round(hex),model);
+	hex = pixel_to_hex(layout, Point(model.obj.position.x, model.obj.position.y));
+	ray(hex_round(hex),model);
 	FindRings();
 	Adv_balance_final();
 	need_balance = BoundingVertices.slice(0);
@@ -290,29 +290,37 @@ function simulate(model){
 	//console.log("animate:"+need_balance);
 }
 var border_geo,border_mat,border_geo2,border_mat2,border1,border2,border3,border4;
-function border_set(){
-	border_geo = new THREE.BoxGeometry( 40, 2, 2 );
+var glass_geo,glass_mat,glass;
+function table_set(){
+	border_geo = new THREE.BoxGeometry( 53, 2, 2 );
 	border_mat = new THREE.MeshPhongMaterial( {color: 0x222222} );
 
-	border_geo2 = new THREE.BoxGeometry( 33, 2, 2 );
+	border_geo2 = new THREE.BoxGeometry( 44.5, 2, 2 );
 	border_mat2 = new THREE.MeshPhongMaterial( {color: 0x222222} );	
 	
 	border1 = new THREE.Mesh( border_geo, border_mat );
-	border1.position.set (-2,11,0);
+	border1.position.set (5,22.5,0);
 	scene.add( border1 );
 
 	border2 = new THREE.Mesh( border_geo, border_mat );
-	border2.position.set (-2,-20,0);
+	border2.position.set (5,-20,0);
 	scene.add( border2 );
 
 	border3 = new THREE.Mesh( border_geo2, border_mat2 );
-	border3.position.set (18,-4.5,0);
+	border3.position.set (30.5,1.2,0);
 	border3.rotation.z = 3.14/2;
 	scene.add( border3 );
 	border4 = new THREE.Mesh( border_geo2, border_mat2 );
-	border4.position.set (-21,-4.5,0);
+	border4.position.set (-21,1.2,0);
 	border4.rotation.z = 3.14/2;
 	scene.add( border4 );	
+	
+	glass_geo = new THREE.BoxGeometry( 53, 44.5, 0.5 );
+	glass_mat = new THREE.MeshPhongMaterial( {color: 0xffffff, transparent: true , opacity: 0.5} );	
+	glass = new THREE.Mesh( glass_geo, glass_mat );
+	glass.position.set(5,0,-0.252);
+	scene.add( glass );
+	
 }
 
 function objtest() {
@@ -333,7 +341,7 @@ function objtest() {
 	obj1.obj = new THREE.Mesh( obj1.geo, obj1.mat );
 	*/
 	obj1.obj.position.set (-3,-5,1);
-	obj1.obj.position.z = 2;
+	obj1.obj.position.z = 1.0;
 	//obj1.obj.position.y = 6;
 	//obj1.obj.position.x = 10;
 	//obj1.obj.rotation.z = 5;
@@ -395,9 +403,9 @@ function init() {
 
     camera = new THREE.PerspectiveCamera(20, window.innerWidth / window.innerHeight, 1, 10000);
     scene.add(camera);
-    camera.position.set (-2.5,60,50);
+    camera.position.set (5,100,70);
     camera.up.set (0,0,1);
-    camera.lookAt (new THREE.Vector3(-2.5,0,0));
+    camera.lookAt (new THREE.Vector3(5,0,0));
 
     light = new THREE.PointLight(0xffffff);
     light.position.set(-30, 50, 100);
@@ -412,7 +420,7 @@ function init() {
     document.body.appendChild(renderer.domElement);
     window.addEventListener('resize', onWindowResize, false);
 
-    //controls = new THREE.TrackballControls(camera);
+    controls = new THREE.TrackballControls(camera);
 
 
     hex0 = initUnitHexMesh();
@@ -427,7 +435,7 @@ function init() {
 	shoes = new obj();
 	shoes.weight = 0.98;
 	objtest();
-	border_set();
+	table_set();
 	load_model();
     hex0.visible = false;
 	//pickables = [obj1.obj,obj2.obj];
@@ -523,7 +531,7 @@ function animate() {
 		pickables = [obj1.obj,obj2.obj,shoes.obj];
 		//startset(shoes);
 		//first_simulate(shoes);
-		startset(obj1);
+		//startset(obj1);
 		first_simulate(obj1);
 		//startset(obj2);
 		//first_simulate(obj2);
@@ -675,9 +683,9 @@ function animate() {
     mesh.geometry.computeVertexNormals();
     
     mesh.geometry.normalsNeedUpdate = true;
-    //controls.update();
+    controls.update();
 	stats.update();
-    //controls.userPan = false;
+    controls.userPan = false;
 	
 	keyboard.update();
     requestAnimationFrame(animate);
