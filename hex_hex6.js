@@ -1,5 +1,5 @@
 var size = 0.5;
-var columns = 60, rows = 60;
+var columns = 150, rows = 150;
 var layout = Layout(layout_pointy, Point(size, size), Point(-21, -21));
 var offset = Math.floor ((rows-1)/2);
 // hash (q,r)--> (q',r) --> vIDs (q',r)

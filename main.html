@@ -292,26 +292,26 @@ function simulate(model){
 var border_geo,border_mat,border_geo2,border_mat2,border1,border2,border3,border4;
 var glass_geo,glass_mat,glass;
 function table_set(){
-	border_geo = new THREE.BoxGeometry( 53, 2, 2 );
+	border_geo = new THREE.BoxGeometry( 135, 4, 4 );
 	border_mat = new THREE.MeshPhongMaterial( {color: 0x222222} );
 
-	border_geo2 = new THREE.BoxGeometry( 44.5, 2, 2 );
+	border_geo2 = new THREE.BoxGeometry( 110, 4, 4 );
 	border_mat2 = new THREE.MeshPhongMaterial( {color: 0x222222} );	
 	
 	border1 = new THREE.Mesh( border_geo, border_mat );
-	border1.position.set (5,22.5,0);
+	border1.position.set (44,90,0);
 	scene.add( border1 );
 
 	border2 = new THREE.Mesh( border_geo, border_mat );
-	border2.position.set (5,-20,0);
+	border2.position.set (44,-20,0);
 	scene.add( border2 );
 
 	border3 = new THREE.Mesh( border_geo2, border_mat2 );
-	border3.position.set (30.5,1.2,0);
+	border3.position.set (109.5,34,0);
 	border3.rotation.z = 3.14/2;
 	scene.add( border3 );
 	border4 = new THREE.Mesh( border_geo2, border_mat2 );
-	border4.position.set (-21,1.2,0);
+	border4.position.set (-21.5,34,0);
 	border4.rotation.z = 3.14/2;
 	scene.add( border4 );	
 	
@@ -319,7 +319,7 @@ function table_set(){
 	glass_mat = new THREE.MeshPhongMaterial( {color: 0xffffff, transparent: true , opacity: 0.5} );	
 	glass = new THREE.Mesh( glass_geo, glass_mat );
 	glass.position.set(5,0,-0.254);
-	scene.add( glass );
+	//scene.add( glass );
 	
 }
 
@@ -341,7 +341,7 @@ function objtest() {
 	obj1.obj = new THREE.Mesh( obj1.geo, obj1.mat );
 	*/
 	obj1.obj.position.set (-3,-5,1);
-	obj1.obj.position.z = 1.0;
+	obj1.obj.position.z = 0.0;
 	//obj1.obj.position.y = 6;
 	//obj1.obj.position.x = 10;
 	//obj1.obj.rotation.z = 5;
@@ -403,9 +403,9 @@ function init() {
 
     camera = new THREE.PerspectiveCamera(20, window.innerWidth / window.innerHeight, 1, 10000);
     scene.add(camera);
-    camera.position.set (5,100,70);
+    camera.position.set (42,280,160);
     camera.up.set (0,0,1);
-    camera.lookAt (new THREE.Vector3(5,0,0));
+    camera.lookAt (new THREE.Vector3(42,50,0));
 
     light = new THREE.PointLight(0xffffff);
     light.position.set(-30, 50, 100);
@@ -420,7 +420,7 @@ function init() {
     document.body.appendChild(renderer.domElement);
     window.addEventListener('resize', onWindowResize, false);
 
-   // controls = new THREE.TrackballControls(camera);
+    //controls = new THREE.TrackballControls(camera);
 
 
     hex0 = initUnitHexMesh();
@@ -469,7 +469,7 @@ function init() {
 	window.addEventListener('resize', onWindowResize, false);
 	
 	// mousemove
-	document.addEventListener( 'mousemove', onDocumentMouseMove, false );
+	//document.addEventListener( 'mousemove', onDocumentMouseMove, false );
 	
     document.addEventListener('touchstart', onDocumentTouchStart, false);
     document.addEventListener('touchmove', onDocumentTouchStart, false);  // same callback	
@@ -522,6 +522,78 @@ function onDocumentTouchStart(event) {
 }
 
 
+/*
+function onDocumentTouchStart(event) {
+	event.preventDefault(); // what is this?
+	
+	var touches = event.changedTouches;
+	for (var i = 0; i < touches.length; i++) {0
+		console.log ('start: ' + touches[i].identifier + ': ' + touches[i].pageX + ', ' + touches[i].pageY);
+
+		mouse.x = ( touches[i].pageX / window.innerWidth ) * 2 - 1;
+		mouse.y = - ( touches[i].pageY / window.innerHeight ) * 2 + 1;
+		raycaster.setFromCamera( mouse, camera );	
+		var intersects = raycaster.intersectObjects( pickables );
+		if (intersects.length > 0) {
+			thiskey = FindKey (intersects[0].object.name);
+			thiskey.obj3d.rotation.x = 0.1;
+			thiskey.sound.noteOn();
+			
+			touchKeys.push ({touch:touches[i].identifier, key: thiskey});
+			// thiskey.pressed not yet set
+		}
+	}
+}
+
+function onDocumentTouchMove(event) {
+	event.preventDefault();
+	var touches = event.changedTouches;
+	for (var i = 0; i < touches.length; i++) {
+		console.log ('move: '+ touches[i].identifier);
+
+		mouse.x = ( touches[i].pageX / window.innerWidth ) * 2 - 1;
+		mouse.y = - ( touches[i].pageY / window.innerHeight ) * 2 + 1;
+		raycaster.setFromCamera( mouse, camera );	
+		var intersects = raycaster.intersectObjects( pickables );
+		if (intersects.length > 0) {
+			thiskey = FindKey (intersects[0].object.name);
+
+			// search current touchKey array
+			for (var ii = 0; ii < touchKeys.length; ii++) {
+				if (touchKeys[ii].touch == touches[i].identifier) {
+					if (touchKeys[ii].key === thiskey) break;
+					
+					touchKeys[ii].key.obj3d.rotation.x = 0;
+					touchKeys[ii].key.sound.noteOff();
+					thiskey.obj3d.rotation.x = 0.1;
+					thiskey.sound.noteOn();
+					touchKeys.splice (ii, 1, {touch:touches[i].identifier, key: thiskey});
+					break;
+				}
+			}
+		}
+		// thiskey.pressed not yet set
+		
+	}
+}
+
+function onDocumentTouchEnd(event) {
+	event.preventDefault();
+	var touches = event.changedTouches;
+	for (var i = 0; i < touches.length; i++) {
+		console.log ('end: ' + touches[i].identifier);
+		
+		for (var ii = 0; ii < touchKeys.length; ii++) {
+			if (touchKeys[ii].touch == touches[i].identifier) {
+				touchKeys[ii].key.obj3d.rotation.x = 0;
+				touchKeys[ii].key.sound.noteOff();
+				touchKeys.splice (ii, 1);
+				break;
+			}
+		}
+	}
+}
+*/
 function animate() {
 
 	if (shoes.obj !== undefined && time===0 && bsphere !== undefined) { 
